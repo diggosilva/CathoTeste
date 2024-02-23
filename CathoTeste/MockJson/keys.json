@@ -1,0 +1,6 @@
+{
+  "auth": "authkey",
+  "tips": "tipskey",
+  "suggestion": "suggestionkey",
+  "survey": "surveykey"
+}
