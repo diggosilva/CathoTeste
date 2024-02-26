@@ -38,8 +38,18 @@ class LoadingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        animateIntro()
         handleStates()
         viewModel.loadData()
+    }
+    
+    func animateIntro() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.spinner.center.y -= 10
+            self.label.center.y += 10
+        }) { (finished) in
+            self.spinner.startAnimating()
+        }
     }
     
     //MARK: - Handle States
@@ -63,8 +73,8 @@ class LoadingViewController: UIViewController {
     func showLoadedState(value: ApiKeys) {
         spinner.stopAnimating()
         stackView.isHidden = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            let vc = FeedViewController(apiKeys: value)
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            let vc = FeedViewController(apiKeys: value, userInfo: <#UserInfo#>)
             vc.modalPresentationStyle = .fullScreen
             self.present(vc, animated: true)
         }

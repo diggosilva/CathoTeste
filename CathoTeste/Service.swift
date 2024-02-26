@@ -14,22 +14,35 @@ protocol ServiceAuthenticatorProtocol {
 }
 
 class ApiKeys: Decodable {
-    var auth: String
-    var tips: String
-    var suggestions: String
-    var survey: String
+    let auth: String
+    let tips: String
+    let suggestion: String
+    let survey: String
 }
 
 class UserInfo: Decodable {
-   
+    let id: String
+    let name: String
+    let token: String
+    let photo: String
 }
 
 class Suggestion: Decodable {
-   
+    let jobAdTile: String
+    let company: String
+    let date: String
+    let totalPositions: Int
+    let locations: [String]
+    let salary: Salary
+}
+
+class Salary: Decodable {
+    let real: String
+    let range: String
 }
 
 class Tips: Decodable {
-   
+    
 }
 
 class ServiceAuthenticator: ServiceAuthenticatorProtocol {
@@ -50,11 +63,16 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
     
     func getKeys(onSuccess: @escaping(ApiKeys) -> Void, onError: @escaping(Error) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            if let path = Bundle.main.path(forResource: "keys", ofType: "json"),
-               let data = try? Data(contentsOf: URL(filePath: path)),
-               let keys = try? JSONDecoder().decode(ApiKeys.self, from: data) {
-                onSuccess(keys)
-                print("DEBUG: Aqui estão as Keys: \(keys)")
+            if let path = Bundle.main.path(forResource: "keys", ofType: "json") {
+                do {
+                    let data = try Data(contentsOf: URL(filePath: path))
+                    let keys = try JSONDecoder().decode(ApiKeys.self, from: data)
+                    onSuccess(keys)
+                    print("DEBUG: Aqui estão as Keys. \(keys)")
+                } catch {
+                    onError(error)
+                    print("DEBUG: Erro: \(error)")
+                }
             } else {
                 onError(NSError(domain: "DEBUG: Erro ao decodificar os Dados Mockados.", code: 1))
             }
@@ -63,11 +81,16 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
     
     func performAuth(userId: String = "ee09bd39-4ca2-47ac-9c5e-9c57ba5a26dc", onSuccess: @escaping(UserInfo) -> Void, onError: @escaping(Error) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            if let path = Bundle.main.path(forResource: "auth", ofType: "json"),
-               let data = try? Data(contentsOf: URL(filePath: path)),
-               let tokens = try? JSONDecoder().decode(UserInfo.self, from: data) {
-                onSuccess(tokens)
-                print("DEBUG: Aqui estão os Tokens: \(tokens)")
+            if let path = Bundle.main.path(forResource: "auth", ofType: "json") {
+                do {
+                    let data = try Data(contentsOf: URL(filePath: path))
+                    let tokens = try JSONDecoder().decode(UserInfo.self, from: data)
+                    onSuccess(tokens)
+                    print("DEBUG: Aqui estão os Tokens.. \(tokens)")
+                } catch {
+                    onError(error)
+                    print("DEBUG: Erro: \(error)")
+                }
             } else {
                 onError(NSError(domain: "DEBUG: Erro ao decodificar os Dados Mockados.", code: 1))
             }
@@ -76,11 +99,16 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
     
     func getSuggestion(userInfo: UserInfo, apiKey: ApiKeys, onSuccess: @escaping([Suggestion]) -> Void, onError: @escaping(Error) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            if let path = Bundle.main.path(forResource: "suggestions", ofType: "json"),
-               let data = try? Data(contentsOf: URL(filePath: path)),
-               let suggestions = try? JSONDecoder().decode([Suggestion].self, from: data) {
-                onSuccess(suggestions)
-                print("DEBUG: Aqui estão as Suggestions: \(suggestions)")
+            if let path = Bundle.main.path(forResource: "suggestions", ofType: "json") {
+                do {
+                    let data = try Data(contentsOf: URL(filePath: path))
+                    let suggestions = try JSONDecoder().decode([Suggestion].self, from: data)
+                     onSuccess(suggestions)
+                     print("DEBUG: Aqui estão as Suggestions: \(suggestions)")
+                } catch {
+                    onError(error)
+                    print("DEBUG: Erro: \(error)")
+                }
             } else {
                 onError(NSError(domain: "DEBUG: Erro ao decodificar os Dados Mockados.", code: 1))
             }
