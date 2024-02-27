@@ -10,76 +10,63 @@ import UIKit
 class FeedViewModel {
     let apiKeys: ApiKeys
     
-    var state: Bindable<States> = Bindable(value: .loading)
+    var state: Bindable<FeedViewControllerStates> = Bindable(value: .loading)
     private var service = ServiceAuthenticator()
     let dispatchGroup = DispatchGroup()
     
     var token: UserInfo?
     var suggestionList: [Suggestion] = []
     var tipList: [Tips] = []
-    var hasArrivedSuggestion: Bool = false
-    var hasArrivedTips: Bool = false
     
     init(apiKeys: ApiKeys) {
         self.apiKeys = apiKeys
     }
     
     func hasArrivedSuggestionAndTips() {
-        if self.hasArrivedSuggestion || self.hasArrivedTips {
-            self.state.value = .loaded(self.apiKeys)
-            print("Entrou aqui e tudo foi carregado")
+        if !suggestionList.isEmpty && !tipList.isEmpty {
+            self.state.value = .loaded
         } else {
-            print("Algo não foi carregado")
+            self.state.value = .error
         }
     }
     
     func loadDataToken() {
-        self.service.performAuth { token in
-            self.state.value = .loading
-            self.token = token
-            self.loadDataSuggestions()
+        service.performAuth { userInfo in
+            self.loadDataSuggestions(userInfo)
             self.loadDataTips()
+            self.dispatchGroup.notify(queue: .main) {
+                self.hasArrivedSuggestionAndTips()
+            }
         } onError: { error in
             self.state.value = .error
         }
     }
     
-    func loadDataSuggestions() {
-        if let userInfo = self.token {
-            dispatchGroup.enter()
-            self.service.getSuggestion(userInfo: userInfo, apiKey: self.apiKeys) { suggestions in
-                self.state.value = .loading
-                
-                    self.suggestionList = suggestions
-//                self.hasArrivedSuggestion = true
-                print(self.hasArrivedSuggestion)
-//                self.hasArrivedSuggestionAndTips()
-            } onError: { error in
-                self.state.value = .error
-            }
-            dispatchGroup.leave()
-            print("DEBUG: Suggestion SAIU.")
-        } else {
-            print("DEBUG: UserInfo is nil.")
-            self.state.value = .error
+    func loadDataSuggestions(_ userInfo: UserInfo) {
+        dispatchGroup.enter()
+        service.getSuggestion(userInfo: userInfo, apiKey: apiKeys) { suggestions in
+            self.suggestionList = suggestions
+            self.dispatchGroup.leave()
+        } onError: { error in
+            self.dispatchGroup.leave()
         }
     }
     
     func loadDataTips() {
         dispatchGroup.enter()
-        self.service.getTips(apiKey: self.apiKeys) { tips in
-            self.state.value = .loading
-                self.tipList = tips
-//            self.hasArrivedTips = true
-            print(self.hasArrivedTips)
-//            self.hasArrivedSuggestionAndTips()
-            self.state.value = .loaded(self.apiKeys)
+        service.getTips(apiKey: self.apiKeys) { tips in
+            self.tipList = tips
+            self.dispatchGroup.leave()
         } onError: { error in
-            self.state.value = .error
+            self.dispatchGroup.leave()
         }
-        dispatchGroup.leave()
-        print("DEBUG: Tips SAIU.")
     }
+}
+
+enum FeedViewControllerStates {
+    case loading
+    case loaded
+    case error
 }
 
 class FeedViewController: UIViewController {
@@ -114,9 +101,6 @@ class FeedViewController: UIViewController {
         setupView()
         handleStates()
         viewModel.loadDataToken()
-//        viewModel.dispatchGroup.notify(queue: .main) {
-//            print("DEU CERTO")
-//        }
     }
     
     func handleStates() {
@@ -124,7 +108,7 @@ class FeedViewController: UIViewController {
             switch state {
             case .loading:
                 self.showLoadingState()
-            case .loaded(_):
+            case .loaded:
                 self.showLoadedState()
             case .error:
                 self.showErrorState()
@@ -136,7 +120,6 @@ class FeedViewController: UIViewController {
         spinner.startAnimating()
         label.isHidden = false
         stackView.isHidden = false
-        print("DEBUG: CARREGANDO DADOS..")
     }
     
     func showLoadedState() {
@@ -146,11 +129,15 @@ class FeedViewController: UIViewController {
     }
     
     func showErrorState() {
-        let alert = UIAlertController(title: "Ocorreu um erro!", message: "Falha ao carregar os Tokens \n\n ESSE ERRO TÁ FULEIRO", preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default) { action in
-            
+        let alert = UIAlertController(title: "Ocorreu um erro!", message: "Tentar novamente?", preferredStyle: .alert)
+        let ok = UIAlertAction(title: "Sim", style: .default) { action in
+            self.viewModel.loadDataToken()
+        }
+        let nok = UIAlertAction(title: "Não", style: .cancel) { action in
+            self.showLoadedState()
         }
         alert.addAction(ok)
+        alert.addAction(nok)
         present(alert, animated: true)
     }
     

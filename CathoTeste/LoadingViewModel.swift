@@ -7,21 +7,21 @@
 
 import Foundation
 
-enum States {
+enum LoadingViewControllerStates {
     case loading
     case loaded(ApiKeys)
     case error
 }
 
 protocol LoadingViewModelProtocol {
-    var state: Bindable<States> { get set }
+    var state: Bindable<LoadingViewControllerStates> { get set }
     
     // Request
     func loadData()
 }
 
 class LoadingViewModel: LoadingViewModelProtocol {
-    var state: Bindable<States> = Bindable(value: .loading)
+    var state: Bindable<LoadingViewControllerStates> = Bindable(value: .loading)
     
     private var service = ServiceAuthenticator()
     
