@@ -12,40 +12,53 @@ class FeedViewModel {
     
     var state: Bindable<States> = Bindable(value: .loading)
     private var service = ServiceAuthenticator()
+    let dispatchGroup = DispatchGroup()
     
     var token: UserInfo?
     var suggestionList: [Suggestion] = []
     var tipList: [Tips] = []
+    var hasArrivedSuggestion: Bool = false
+    var hasArrivedTips: Bool = false
     
     init(apiKeys: ApiKeys) {
         self.apiKeys = apiKeys
     }
     
+    func hasArrivedSuggestionAndTips() {
+        if self.hasArrivedSuggestion || self.hasArrivedTips {
+            self.state.value = .loaded(self.apiKeys)
+            print("Entrou aqui e tudo foi carregado")
+        } else {
+            print("Algo não foi carregado")
+        }
+    }
+    
     func loadDataToken() {
-        guard !service.isUpdating() else { return }
         self.service.performAuth { token in
             self.state.value = .loading
-//            print("DEBUG: Token.. \(token)")
             self.token = token
             self.loadDataSuggestions()
+            self.loadDataTips()
         } onError: { error in
             self.state.value = .error
         }
     }
     
     func loadDataSuggestions() {
-        guard !service.isUpdating() else { return }
         if let userInfo = self.token {
+            dispatchGroup.enter()
             self.service.getSuggestion(userInfo: userInfo, apiKey: self.apiKeys) { suggestions in
                 self.state.value = .loading
-//                print("DEBUG: Suggestions.. \(suggestions)")
-                UserSessionSingleton.shared.suggestionList.bind { suggestions in
+                
                     self.suggestionList = suggestions
-                }
-                self.loadDataTips()
+//                self.hasArrivedSuggestion = true
+                print(self.hasArrivedSuggestion)
+//                self.hasArrivedSuggestionAndTips()
             } onError: { error in
                 self.state.value = .error
             }
+            dispatchGroup.leave()
+            print("DEBUG: Suggestion SAIU.")
         } else {
             print("DEBUG: UserInfo is nil.")
             self.state.value = .error
@@ -53,17 +66,19 @@ class FeedViewModel {
     }
     
     func loadDataTips() {
-        guard !service.isUpdating() else { return }
+        dispatchGroup.enter()
         self.service.getTips(apiKey: self.apiKeys) { tips in
             self.state.value = .loading
-//            print("DEBUG: Tips.. \(tips)")
-            UserSessionSingleton.shared.tipList.bind { tips in
                 self.tipList = tips
-            }
+//            self.hasArrivedTips = true
+            print(self.hasArrivedTips)
+//            self.hasArrivedSuggestionAndTips()
             self.state.value = .loaded(self.apiKeys)
         } onError: { error in
             self.state.value = .error
         }
+        dispatchGroup.leave()
+        print("DEBUG: Tips SAIU.")
     }
 }
 
@@ -99,6 +114,9 @@ class FeedViewController: UIViewController {
         setupView()
         handleStates()
         viewModel.loadDataToken()
+//        viewModel.dispatchGroup.notify(queue: .main) {
+//            print("DEU CERTO")
+//        }
     }
     
     func handleStates() {
@@ -115,6 +133,9 @@ class FeedViewController: UIViewController {
     }
     
     func showLoadingState() {
+        spinner.startAnimating()
+        label.isHidden = false
+        stackView.isHidden = false
         print("DEBUG: CARREGANDO DADOS..")
     }
     

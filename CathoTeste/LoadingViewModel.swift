@@ -24,16 +24,13 @@ class LoadingViewModel: LoadingViewModelProtocol {
     var state: Bindable<States> = Bindable(value: .loading)
     
     private var service = ServiceAuthenticator()
-
+    
     func loadData() {
-        guard !service.isUpdating() else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.service.getKeys { apiKeys in
-                self.state.value = .loaded(apiKeys)
-                print(apiKeys)
-            } onError: { error in
-                self.state.value = .error
-            }
+        self.service.getKeys { apiKeys in
+            self.state.value = .loaded(apiKeys)
+            print(apiKeys)
+        } onError: { error in
+            self.state.value = .error
         }
     }
 }

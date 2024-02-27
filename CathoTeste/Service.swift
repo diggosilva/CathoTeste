@@ -10,7 +10,6 @@ import UIKit
 // MARK: Service
 protocol ServiceAuthenticatorProtocol {
     var dataTask: URLSessionDataTask? { get set }
-    func isUpdating() -> Bool
 }
 
 class ApiKeys: Decodable {
@@ -55,13 +54,6 @@ class Button: Decodable {
 
 class ServiceAuthenticator: ServiceAuthenticatorProtocol {
     var dataTask: URLSessionDataTask?
-    
-    func isUpdating() -> Bool {
-        if let dataTask = dataTask {
-            return dataTask.state == .running
-        }
-        return false
-    }
     
     // MARK: Endpoints
     let authGET = "http://localhost:4040/auth/$userId"
@@ -111,8 +103,8 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
                 do {
                     let data = try Data(contentsOf: URL(filePath: path))
                     let suggestions = try JSONDecoder().decode([Suggestion].self, from: data)
-                     onSuccess(suggestions)
-                     print("DEBUG: Aqui estão as Suggestions: \(suggestions)")
+                    onSuccess(suggestions)
+                    print("DEBUG: Aqui estão as Suggestions: \(suggestions)")
                 } catch {
                     onError(error)
                     print("DEBUG: Erro: \(error)")
@@ -141,7 +133,5 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
 class UserSessionSingleton {
     static let shared: UserSessionSingleton = UserSessionSingleton()
     var keys: Bindable<[ApiKeys]> = Bindable(value: [])
-    var suggestionList: Bindable<[Suggestion]> = Bindable(value: [])
-    var tipList: Bindable<[Tips]> = Bindable(value: [])
     private init() {}
 }
