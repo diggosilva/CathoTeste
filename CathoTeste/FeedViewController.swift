@@ -13,33 +13,58 @@ class FeedViewModel {
     var state: Bindable<States> = Bindable(value: .loading)
     private var service = ServiceAuthenticator()
     
+    var token: UserInfo?
+    var suggestionList: [Suggestion] = []
+    var tipList: [Tips] = []
+    
     init(apiKeys: ApiKeys) {
         self.apiKeys = apiKeys
     }
     
     func loadDataToken() {
         guard !service.isUpdating() else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.service.performAuth { token in
-                self.state.value = .loaded(self.apiKeys)
-                print("DEBUG: Token \(token) ")
-            } onError: { error in
-                self.state.value = .error
-            }
+        self.service.performAuth { token in
+            self.state.value = .loading
+//            print("DEBUG: Token.. \(token)")
+            self.token = token
+            self.loadDataSuggestions()
+        } onError: { error in
+            self.state.value = .error
         }
     }
     
-//    func loadDataSuggestions() {
-//        guard !service.isUpdating() else { return }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            self.service.getSuggestion(apiKey: self.apiKeys) { suggestions in
-//                self.state.value = .loaded(self.apiKeys)
+    func loadDataSuggestions() {
+        guard !service.isUpdating() else { return }
+        if let userInfo = self.token {
+            self.service.getSuggestion(userInfo: userInfo, apiKey: self.apiKeys) { suggestions in
+                self.state.value = .loading
 //                print("DEBUG: Suggestions.. \(suggestions)")
-//            } onError: { error in
-//                self.state.value = .error
-//            }
-//        }
-//    }
+                UserSessionSingleton.shared.suggestionList.bind { suggestions in
+                    self.suggestionList = suggestions
+                }
+                self.loadDataTips()
+            } onError: { error in
+                self.state.value = .error
+            }
+        } else {
+            print("DEBUG: UserInfo is nil.")
+            self.state.value = .error
+        }
+    }
+    
+    func loadDataTips() {
+        guard !service.isUpdating() else { return }
+        self.service.getTips(apiKey: self.apiKeys) { tips in
+            self.state.value = .loading
+//            print("DEBUG: Tips.. \(tips)")
+            UserSessionSingleton.shared.tipList.bind { tips in
+                self.tipList = tips
+            }
+            self.state.value = .loaded(self.apiKeys)
+        } onError: { error in
+            self.state.value = .error
+        }
+    }
 }
 
 class FeedViewController: UIViewController {
@@ -94,19 +119,21 @@ class FeedViewController: UIViewController {
     }
     
     func showLoadedState() {
-        print("DEBUG: CARREGADO..")
+        spinner.stopAnimating()
+        label.isHidden = true
+        stackView.isHidden = true
     }
     
     func showErrorState() {
-        let alert = UIAlertController(title: "Ocorreu um erro!", message: "Falha ao carregar os Tokens", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Ocorreu um erro!", message: "Falha ao carregar os Tokens \n\n ESSE ERRO TÁ FULEIRO", preferredStyle: .alert)
         let ok = UIAlertAction(title: "OK", style: .default) { action in
-          
+            
         }
         alert.addAction(ok)
         present(alert, animated: true)
     }
     
-    init(apiKeys: ApiKeys, userInfo: UserInfo) {
+    init(apiKeys: ApiKeys) {
         self.viewModel = FeedViewModel(apiKeys: apiKeys)
         super.init(nibName: nil, bundle: nil)
     }
@@ -135,5 +162,4 @@ class FeedViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
     }
-    
 }

@@ -74,7 +74,7 @@ class LoadingViewController: UIViewController {
         spinner.stopAnimating()
         stackView.isHidden = true
         DispatchQueue.main.asyncAfter(deadline: .now()) {
-            let vc = FeedViewController(apiKeys: value, userInfo: <#UserInfo#>)
+            let vc = FeedViewController(apiKeys: value)
             vc.modalPresentationStyle = .fullScreen
             self.present(vc, animated: true)
         }

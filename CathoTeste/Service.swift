@@ -42,7 +42,15 @@ class Salary: Decodable {
 }
 
 class Tips: Decodable {
-    
+    let id: String
+    let description: String
+    let button: Button
+}
+
+class Button: Decodable {
+    let show: Bool
+    let label: String
+    let url: String
 }
 
 class ServiceAuthenticator: ServiceAuthenticatorProtocol {
@@ -133,6 +141,7 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
 class UserSessionSingleton {
     static let shared: UserSessionSingleton = UserSessionSingleton()
     var keys: Bindable<[ApiKeys]> = Bindable(value: [])
-    
+    var suggestionList: Bindable<[Suggestion]> = Bindable(value: [])
+    var tipList: Bindable<[Tips]> = Bindable(value: [])
     private init() {}
 }
