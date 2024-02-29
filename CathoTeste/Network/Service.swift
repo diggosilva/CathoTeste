@@ -12,46 +12,6 @@ protocol ServiceAuthenticatorProtocol {
     var dataTask: URLSessionDataTask? { get set }
 }
 
-class ApiKeys: Decodable {
-    let auth: String
-    let tips: String
-    let suggestion: String
-    let survey: String
-}
-
-class UserInfo: Decodable {
-    let id: String
-    let name: String
-    let token: String
-    let photo: String
-}
-
-class Suggestion: Decodable {
-    let jobAdTile: String
-    let company: String
-    let date: String
-    let totalPositions: Int
-    let locations: [String]
-    let salary: Salary
-}
-
-class Salary: Decodable {
-    let real: String
-    let range: String
-}
-
-class Tips: Decodable {
-    let id: String
-    let description: String
-    let button: Button
-}
-
-class Button: Decodable {
-    let show: Bool
-    let label: String
-    let url: String
-}
-
 class ServiceAuthenticator: ServiceAuthenticatorProtocol {
     var dataTask: URLSessionDataTask?
     
@@ -62,13 +22,13 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
     let surveyPOST = "http://localhost:4040/survey/tips/$tipId/$action"
     
     func getKeys(onSuccess: @escaping(ApiKeys) -> Void, onError: @escaping(Error) -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             if let path = Bundle.main.path(forResource: "keys", ofType: "json") {
                 do {
                     let data = try Data(contentsOf: URL(filePath: path))
                     let keys = try JSONDecoder().decode(ApiKeys.self, from: data)
                     onSuccess(keys)
-                    print("DEBUG: Aqui estão as Keys. \(keys)")
+                    print("DEBUG: Aqui estão as Keys: \(keys)")
                 } catch {
                     onError(error)
                     print("DEBUG: Erro: \(error)")
@@ -86,7 +46,7 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
                     let data = try Data(contentsOf: URL(filePath: path))
                     let tokens = try JSONDecoder().decode(UserInfo.self, from: data)
                     onSuccess(tokens)
-                    print("DEBUG: Aqui estão os Tokens.. \(tokens)")
+                    print("DEBUG: Aqui estão os Tokens: \(tokens)")
                 } catch {
                     onError(error)
                     print("DEBUG: Erro: \(error)")
@@ -127,11 +87,4 @@ class ServiceAuthenticator: ServiceAuthenticatorProtocol {
             }
         }
     }
-}
-
-// MARK: UserSessionSingleton
-class UserSessionSingleton {
-    static let shared: UserSessionSingleton = UserSessionSingleton()
-    var keys: Bindable<[ApiKeys]> = Bindable(value: [])
-    private init() {}
 }
