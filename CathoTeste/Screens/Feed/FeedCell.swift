@@ -10,27 +10,27 @@ import UIKit
 class FeedCell: UICollectionViewCell {
     static let identifier = "FeedCell"
     
-    lazy var titleLabel1: UILabel = {
+    lazy var companyLabel: UILabel = {
         Components.buildLabel(text: "Assistente de Telemarketing Ativista", textColor: .systemBlue, font: .systemFont(ofSize: 16, weight: .semibold))
     }()
     
-    lazy var titleLabel2: UILabel = {
+    lazy var jobLabel: UILabel = {
         Components.buildLabel(text: "WESGERBER Transportadora de laticínios", textColor: .gray, font: .systemFont(ofSize: 16))
     }()
     
-    lazy var titleLabel3: UILabel = {
+    lazy var locationsLabel: UILabel = {
         Components.buildLabel(text: "3 vagas - São Paulo (SP) + 3 cidades", textColor: .gray, font: .systemFont(ofSize: 16))
     }()
     
-    lazy var titleLabel4: UILabel = {
+    lazy var salaryLabel: UILabel = {
         Components.buildLabel(text: "R$2.001,00 a R$3.000,00", textColor: .gray, font: .systemFont(ofSize: 16, weight: .semibold))
     }()
     
     lazy var vStackView: UIStackView = {
-        Components.buildStack(arrangedSubviews: [titleLabel1, titleLabel2, titleLabel3, titleLabel4], axis: .vertical)
+        Components.buildStack(arrangedSubviews: [companyLabel, jobLabel, locationsLabel, salaryLabel], axis: .vertical)
     }()
     
-    lazy var titleLabel1Day: UILabel = {
+    lazy var dateLabel: UILabel = {
         Components.buildLabel(text: "hoje", textColor: .systemOrange, font: .boldSystemFont(ofSize: 16), textAlignment: .right)
     }()
     
@@ -38,7 +38,7 @@ class FeedCell: UICollectionViewCell {
         Components.buildEyeImage()
     }()
     
-    lazy var enviarCVButton: UIButton = {
+    lazy var sendCVButton: UIButton = {
         Components.buildButtonSendCV()
     }()
     
@@ -52,11 +52,11 @@ class FeedCell: UICollectionViewCell {
     }
     
     func configure(model: Suggestion) {
-        titleLabel1.text = model.company
-        titleLabel2.text = model.jobAdTile
-        titleLabel3.text = model.locations.first
-        titleLabel4.text = model.salary.range
-        titleLabel1Day.text = model.date
+        companyLabel.text = model.company
+        jobLabel.text = model.jobAdTile
+        locationsLabel.text = model.locations.joined(separator: "; ")
+        salaryLabel.text = model.salary.range
+        dateLabel.text = model.date
     }
     
     private func setupView() {
@@ -65,25 +65,25 @@ class FeedCell: UICollectionViewCell {
     }
     
     private func setHierarchy () {
-        addSubviews([vStackView, titleLabel1Day, eyeImageView, enviarCVButton])
+        addSubviews([vStackView, dateLabel, eyeImageView, sendCVButton])
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
             vStackView.topAnchor.constraint(equalTo: topAnchor, constant: 15),
             vStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            vStackView.trailingAnchor.constraint(equalTo: titleLabel1Day.leadingAnchor, constant: -15),
+            vStackView.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor, constant: -15),
             
-            titleLabel1Day.topAnchor.constraint(equalTo: vStackView.topAnchor),
-            titleLabel1Day.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            dateLabel.topAnchor.constraint(equalTo: vStackView.topAnchor),
+            dateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             
             eyeImageView.bottomAnchor.constraint(equalTo: vStackView.bottomAnchor),
-            eyeImageView.trailingAnchor.constraint(equalTo: titleLabel1Day.trailingAnchor),
+            eyeImageView.trailingAnchor.constraint(equalTo: dateLabel.trailingAnchor),
             
-            enviarCVButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15),
-            enviarCVButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            enviarCVButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
-            enviarCVButton.heightAnchor.constraint(equalToConstant: 40),
+            sendCVButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15),
+            sendCVButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
+            sendCVButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            sendCVButton.heightAnchor.constraint(equalToConstant: 40),
         ])
     }
 }

@@ -86,7 +86,6 @@ class Components {
         button.setTitle("CHECAR CURRÍCULO", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.setTitleColor(.azulCatho, for: .normal)
-        button.backgroundColor = .white
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.azulCatho.cgColor
         button.layer.cornerRadius = 5
