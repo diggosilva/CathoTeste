@@ -10,23 +10,28 @@ import UIKit
 class FeedSuggestionView: UIView {
     
     //MARK: - SUGGESTION VIEW
+    
     lazy var suggestionLabel: UILabel = {
         Components.buildLabel(text: "Sugestões de vagas para você", textColor: .white, font: .systemFont(ofSize: 20, weight: .semibold))
     }()
     
     lazy var suggestionCollectionView: UICollectionView = {
-        Components.buildCollectionView()
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        collectionView.delegate = self
+//        collectionView.dataSource = self
+        collectionView.register(FeedSuggestionCell.self, forCellWithReuseIdentifier: FeedSuggestionCell.identifier)
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.backgroundColor = .clear
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
     }()
     
     lazy var pageControl: UIPageControl = {
         Components.buildPageControl()
-    }()
-    
-    lazy var vStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [suggestionLabel, suggestionCollectionView, pageControl])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        return stackView
     }()
     
     override init(frame: CGRect) {
@@ -44,17 +49,34 @@ class FeedSuggestionView: UIView {
     }
     
     private func setHierarchy () {
-        
-        addSubviews([vStackView])
+        backgroundColor = .red
+        addSubviews([suggestionLabel, suggestionCollectionView, pageControl])
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-//            vStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            vStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-//            vStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            vStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            vStackView.heightAnchor.constraint(equalToConstant: 200),
+            suggestionLabel.topAnchor.constraint(equalTo: topAnchor),
+            suggestionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            suggestionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            
+            suggestionCollectionView.topAnchor.constraint(equalTo: suggestionLabel.bottomAnchor, constant: 20),
+            suggestionCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            suggestionCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            suggestionCollectionView.heightAnchor.constraint(equalToConstant: 200),
+            
+            pageControl.centerXAnchor.constraint(equalTo: suggestionCollectionView.centerXAnchor),
+            pageControl.topAnchor.constraint(equalTo: suggestionCollectionView.bottomAnchor, constant: 20),
+            pageControl.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }
+
+//extension FeedSuggestionView: UICollectionViewDelegate, UICollectionViewDataSource {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        <#code#>
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        <#code#>
+//    }
+//}

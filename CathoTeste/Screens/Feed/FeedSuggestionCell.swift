@@ -1,5 +1,5 @@
 //
-//  FeedCell.swift
+//  FeedSuggestionCell.swift
 //  CathoTeste
 //
 //  Created by Diggo Silva on 29/02/24.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-class FeedCell: UICollectionViewCell {
-    static let identifier = "FeedCell"
+class FeedSuggestionCell: UICollectionViewCell {
+    static let identifier = "FeedSuggestionCell"
     
     lazy var companyLabel: UILabel = {
         Components.buildLabel(text: "Assistente de Telemarketing Ativista", textColor: .systemBlue, font: .systemFont(ofSize: 16, weight: .semibold))

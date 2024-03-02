@@ -27,12 +27,20 @@ class FeedViewModel {
         self.apiKeys = apiKeys
     }
     
-    func numberOfRows() -> Int {
+    func numberOfRowsSuggestion() -> Int {
         return suggestionList.count
     }
     
     func suggestion(of indexPath: IndexPath) -> Suggestion {
         suggestionList[indexPath.row]
+    }
+    
+    func numberOfRowsTips() -> Int {
+        return tipList.count
+    }
+    
+    func tips(of indexPath: IndexPath) -> Tips {
+        tipList[indexPath.row]
     }
     
     func hasArrivedSuggestionAndTips() {

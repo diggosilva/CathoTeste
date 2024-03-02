@@ -9,8 +9,6 @@ import UIKit
 
 class FeedView: UIView {
     
-    var feedSuggestionView = FeedSuggestionView()
-    
     //MARK: - APP PROFILE
     lazy var imageView: UIImageView = {
         Components.buildImage()
@@ -21,56 +19,14 @@ class FeedView: UIView {
     }()
     
     //MARK: - COLLECTIONVIEW
-//    lazy var suggestionLabel: UILabel = {
-//        Components.buildLabel(text: "Sugestões de vagas para você", textColor: .white, font: .systemFont(ofSize: 20, weight: .semibold))
-//    }()
-//    
-//    lazy var suggestionCollectionView: UICollectionView = {
-//        Components.buildCollectionView()
-////        FeedSuggestionView()
-//    }()
-//    
-//    lazy var pageControl: UIPageControl = {
-//        Components.buildPageControl()
-//    }()
+    lazy var feedSuggestionView = FeedSuggestionView()
     
     //MARK: - CARD INFERIOR HINTS
-    lazy var hintLabel: UILabel = {
-        Components.buildLabel(text: "#DicasDosRecrutadores", textColor: .white, font: .systemFont(ofSize: 20, weight: .semibold))
-    }()
-    
-    lazy var hintCard: UIView = {
-        Components.buildHintCardBG()
-    }()
-    
-    lazy var hintLabel2: UILabel = {
-        Components.buildLabel(text: "Antes de enviar o seu currículo, que tal bla bla bla", textColor: .gray, font: .systemFont(ofSize: 16, weight: .regular), numberOfLines: 0)
-    }()
-    
-    lazy var checarCVButton: UIButton = {
-        Components.buildButtonCheckCV()
-    }()
-    
-    lazy var utilLabel: UILabel = {
-        Components.buildLabel(text: "Achou útil?", textColor: .gray, font: .systemFont(ofSize: 16, weight: .regular))
-    }()
-    
-    lazy var thumbsUpButton: UIButton = {
-        Components.buildButtonLikeDislike(systemName: "hand.thumbsup.fill")
-    }()
-    
-    lazy var thumbsDownButton: UIButton = {
-        Components.buildButtonLikeDislike(systemName: "hand.thumbsdown.fill")
-    }()
-    
-    lazy var hStackView: UIStackView = {
-        Components.buildStack(arrangedSubviews: [checarCVButton, utilLabel, thumbsUpButton, thumbsDownButton], axis: .horizontal)
-    }()
+    lazy var feedTipsView = FeedTipsView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        
     }
     
     required init?(coder: NSCoder) {
@@ -81,10 +37,6 @@ class FeedView: UIView {
         nameLabel.text = "Olá, \(model.name)"
     }
     
-    func configureTips(model: Tips) {
-        
-    }
-    
     private func setupView() {
         setHierarchy()
         setConstraints()
@@ -93,12 +45,14 @@ class FeedView: UIView {
     private func setHierarchy() {
         backgroundColor = .azulCatho
         
+        feedSuggestionView.translatesAutoresizingMaskIntoConstraints = false
+        feedTipsView.translatesAutoresizingMaskIntoConstraints = false
+        
         addSubviews([
-            imageView, nameLabel, feedSuggestionView,
-            hintLabel, hintCard, hintLabel2, hStackView
+            imageView, nameLabel, feedSuggestionView
         ])
+        addSubview(feedTipsView)
     }
-    
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
@@ -110,69 +64,18 @@ class FeedView: UIView {
             nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             nameLabel.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
             
-            feedSuggestionView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
+            feedSuggestionView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 40),
             feedSuggestionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             feedSuggestionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            feedSuggestionView.heightAnchor.constraint(equalToConstant: 200),
+//            feedSuggestionView.heightAnchor.constraint(equalToConstant: 200),
             
-            hintLabel.bottomAnchor.constraint(equalTo: hintCard.topAnchor, constant: -20),
-            hintLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-            hintLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 20),
             
-            hintCard.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            hintCard.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-//            hintCard.trailingAnchor.constraint(equalTo: suggestionLabel.trailingAnchor),
-            hintCard.heightAnchor.constraint(equalToConstant: 200),
             
-            hintLabel2.topAnchor.constraint(equalTo: hintCard.topAnchor, constant: 15),
-            hintLabel2.leadingAnchor.constraint(equalTo: hintCard.leadingAnchor, constant: 15),
-            hintLabel2.trailingAnchor.constraint(equalTo: hintCard.trailingAnchor, constant: -15),
             
-            hStackView.bottomAnchor.constraint(equalTo: hintCard.bottomAnchor, constant: -15),
-            hStackView.leadingAnchor.constraint(equalTo: hintCard.leadingAnchor, constant: 15),
-            hStackView.trailingAnchor.constraint(equalTo: hintCard.trailingAnchor, constant: -15),
+            feedTipsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            feedTipsView.leadingAnchor.constraint(equalTo: feedSuggestionView.leadingAnchor),
+            feedTipsView.trailingAnchor.constraint(equalTo: feedSuggestionView.trailingAnchor),
+//            feedTipsView.heightAnchor.constraint(equalToConstant: 200),
         ])
     }
-    
-    
-//    private func setConstraints() {
-//        NSLayoutConstraint.activate([
-//            imageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10),
-//            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-//            imageView.widthAnchor.constraint(equalToConstant: 80),
-//            imageView.heightAnchor.constraint(equalToConstant: 80),
-//            
-//            nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            nameLabel.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
-//            
-//            suggestionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 40),
-//            suggestionLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-//            suggestionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-//            
-//            suggestionCollectionView.topAnchor.constraint(equalTo: suggestionLabel.bottomAnchor, constant: 20),
-//            suggestionCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            suggestionCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            suggestionCollectionView.heightAnchor.constraint(equalToConstant: 200),
-//            
-//            pageControl.topAnchor.constraint(equalTo: suggestionCollectionView.bottomAnchor, constant: 20),
-//            pageControl.centerXAnchor.constraint(equalTo: suggestionCollectionView.centerXAnchor),
-//            
-//            hintLabel.bottomAnchor.constraint(equalTo: hintCard.topAnchor, constant: -20),
-//            hintLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-//            hintLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 20),
-//            
-//            hintCard.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
-//            hintCard.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-//            hintCard.trailingAnchor.constraint(equalTo: suggestionLabel.trailingAnchor),
-//            hintCard.heightAnchor.constraint(equalToConstant: 200),
-//            
-//            hintLabel2.topAnchor.constraint(equalTo: hintCard.topAnchor, constant: 15),
-//            hintLabel2.leadingAnchor.constraint(equalTo: hintCard.leadingAnchor, constant: 15),
-//            hintLabel2.trailingAnchor.constraint(equalTo: hintCard.trailingAnchor, constant: -15),
-//            
-//            hStackView.bottomAnchor.constraint(equalTo: hintCard.bottomAnchor, constant: -15),
-//            hStackView.leadingAnchor.constraint(equalTo: hintCard.leadingAnchor, constant: 15),
-//            hStackView.trailingAnchor.constraint(equalTo: hintCard.trailingAnchor, constant: -15),
-//        ])
-//    }
 }

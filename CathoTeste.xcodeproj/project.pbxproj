@@ -7,13 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		92137BE62B938944002AF0B2 /* FeedTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92137BE52B938944002AF0B2 /* FeedTipsView.swift */; };
+		92137BE82B938A58002AF0B2 /* FeedTipsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92137BE72B938A58002AF0B2 /* FeedTipsCell.swift */; };
 		923795822B6D9D570074711B /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923795812B6D9D570074711B /* Service.swift */; };
 		923795842B6DA3B10074711B /* Bindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923795832B6DA3B10074711B /* Bindable.swift */; };
 		924AECF72B90B8A700DA9294 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924AECF62B90B8A700DA9294 /* FeedViewModel.swift */; };
 		924AECF92B90B92200DA9294 /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924AECF82B90B92200DA9294 /* FeedView.swift */; };
 		924AECFE2B90BF0300DA9294 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924AECFD2B90BF0300DA9294 /* Extensions.swift */; };
 		9255DD832B92650F0077CE96 /* FeedSuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9255DD822B92650F0077CE96 /* FeedSuggestionView.swift */; };
-		9274D01A2B90EB29001A282B /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9274D0192B90EB29001A282B /* FeedCell.swift */; };
+		9274D01A2B90EB29001A282B /* FeedSuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9274D0192B90EB29001A282B /* FeedSuggestionCell.swift */; };
 		9274D01F2B911E88001A282B /* ApiKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9274D01E2B911E88001A282B /* ApiKeys.swift */; };
 		9274D0212B911E98001A282B /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9274D0202B911E98001A282B /* UserInfo.swift */; };
 		9274D0232B911EA0001A282B /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9274D0222B911EA0001A282B /* Suggestion.swift */; };
@@ -34,13 +36,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		92137BE52B938944002AF0B2 /* FeedTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTipsView.swift; sourceTree = "<group>"; };
+		92137BE72B938A58002AF0B2 /* FeedTipsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTipsCell.swift; sourceTree = "<group>"; };
 		923795812B6D9D570074711B /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		923795832B6DA3B10074711B /* Bindable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindable.swift; sourceTree = "<group>"; };
 		924AECF62B90B8A700DA9294 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 		924AECF82B90B92200DA9294 /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
 		924AECFD2B90BF0300DA9294 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9255DD822B92650F0077CE96 /* FeedSuggestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSuggestionView.swift; sourceTree = "<group>"; };
-		9274D0192B90EB29001A282B /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
+		9274D0192B90EB29001A282B /* FeedSuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSuggestionCell.swift; sourceTree = "<group>"; };
 		9274D01E2B911E88001A282B /* ApiKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiKeys.swift; sourceTree = "<group>"; };
 		9274D0202B911E98001A282B /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		9274D0222B911EA0001A282B /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
@@ -109,8 +113,10 @@
 				9287ECA22B6C1C31002AA8EE /* FeedViewController.swift */,
 				924AECF82B90B92200DA9294 /* FeedView.swift */,
 				9255DD822B92650F0077CE96 /* FeedSuggestionView.swift */,
+				9274D0192B90EB29001A282B /* FeedSuggestionCell.swift */,
+				92137BE52B938944002AF0B2 /* FeedTipsView.swift */,
+				92137BE72B938A58002AF0B2 /* FeedTipsCell.swift */,
 				924AECF62B90B8A700DA9294 /* FeedViewModel.swift */,
-				9274D0192B90EB29001A282B /* FeedCell.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -127,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				923795832B6DA3B10074711B /* Bindable.swift */,
+				9274D0282B912F55001A282B /* Components.swift */,
 				924AECFD2B90BF0300DA9294 /* Extensions.swift */,
 				9274D0262B911F30001A282B /* UserSessionSingleton.swift */,
 			);
@@ -180,7 +187,6 @@
 				9274D01C2B911E60001A282B /* Utils */,
 				9274D01D2B911E6D001A282B /* Model */,
 				924AECFA2B90BB8C00DA9294 /* Screens */,
-				9274D0282B912F55001A282B /* Components.swift */,
 			);
 			path = CathoTeste;
 			sourceTree = "<group>";
@@ -261,16 +267,18 @@
 			files = (
 				923795842B6DA3B10074711B /* Bindable.swift in Sources */,
 				924AECF92B90B92200DA9294 /* FeedView.swift in Sources */,
+				92137BE62B938944002AF0B2 /* FeedTipsView.swift in Sources */,
 				9274D01F2B911E88001A282B /* ApiKeys.swift in Sources */,
 				9287ECA32B6C1C31002AA8EE /* FeedViewController.swift in Sources */,
 				923795822B6D9D570074711B /* Service.swift in Sources */,
 				9274D0232B911EA0001A282B /* Suggestion.swift in Sources */,
-				9274D01A2B90EB29001A282B /* FeedCell.swift in Sources */,
+				9274D01A2B90EB29001A282B /* FeedSuggestionCell.swift in Sources */,
 				92BE90502B86502E00B18C8E /* LoadingViewModel.swift in Sources */,
 				924AECFE2B90BF0300DA9294 /* Extensions.swift in Sources */,
 				9274D0212B911E98001A282B /* UserInfo.swift in Sources */,
 				9287EC9F2B6C1C31002AA8EE /* AppDelegate.swift in Sources */,
 				9274D0272B911F30001A282B /* UserSessionSingleton.swift in Sources */,
+				92137BE82B938A58002AF0B2 /* FeedTipsCell.swift in Sources */,
 				9255DD832B92650F0077CE96 /* FeedSuggestionView.swift in Sources */,
 				9274D0252B911EF9001A282B /* Tips.swift in Sources */,
 				9287ECA12B6C1C31002AA8EE /* SceneDelegate.swift in Sources */,

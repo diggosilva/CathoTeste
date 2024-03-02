@@ -43,47 +43,26 @@ class FeedViewController: UIViewController {
         }
     }
     
-    
     func showLoadingState() {
         feedView.imageView.isHidden = true
         feedView.nameLabel.isHidden = true
         feedView.feedSuggestionView.isHidden = true
-        self.feedView.hintCard.isHidden = true
-        self.feedView.hintLabel.isHidden = true
-        self.feedView.hintLabel2.isHidden = true
-        self.feedView.hStackView.isHidden = true
+        feedView.feedTipsView.isHidden = true
     }
     
     func showLoadedState() {
-        feedView.feedSuggestionView.suggestionCollectionView.delegate = self
-        feedView.feedSuggestionView.suggestionCollectionView.dataSource = self
         feedView.imageView.isHidden = false
         feedView.nameLabel.isHidden = false
+        
+        feedView.feedSuggestionView.suggestionCollectionView.delegate = self
+        feedView.feedSuggestionView.suggestionCollectionView.dataSource = self
+        feedView.feedSuggestionView.pageControl.numberOfPages = viewModel.numberOfRowsSuggestion()
         feedView.feedSuggestionView.isHidden = false
-        feedView.feedSuggestionView.pageControl.numberOfPages = viewModel.numberOfRows()
+        
+        feedView.feedTipsView.tipsCollectionView.delegate = self
+        feedView.feedTipsView.tipsCollectionView.dataSource = self
+        feedView.feedTipsView.isHidden = false
     }
-    
-    
-//    func showLoadingState() {
-//        feedView.imageView.isHidden = true
-//        feedView.nameLabel.isHidden = true
-//        feedView.suggestionLabel.isHidden = true
-//        feedView.suggestionCollectionView.isHidden = true
-//        self.feedView.hintCard.isHidden = true
-//        self.feedView.hintLabel.isHidden = true
-//        self.feedView.hintLabel2.isHidden = true
-//        self.feedView.hStackView.isHidden = true
-//    }
-//    
-//    func showLoadedState() {
-//        feedView.suggestionCollectionView.delegate = self
-//        feedView.suggestionCollectionView.dataSource = self
-//        feedView.imageView.isHidden = false
-//        feedView.nameLabel.isHidden = false
-//        feedView.suggestionLabel.isHidden = false
-//        feedView.suggestionCollectionView.isHidden = false
-//        feedView.pageControl.numberOfPages = viewModel.numberOfRows()
-//    }
     
     func showErrorState() {
         let alert = UIAlertController(title: "Ocorreu um erro!", message: "Tentar novamente?", preferredStyle: .alert)
@@ -99,7 +78,7 @@ class FeedViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    func configCollectionCell(cell: FeedCell) {
+    func configCollectionCell(cell: FeedSuggestionCell) {
         cell.backgroundColor = .white
         cell.layer.cornerRadius = 10
     }
@@ -107,11 +86,11 @@ class FeedViewController: UIViewController {
 
 extension FeedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.numberOfRows()
+        return viewModel.numberOfRowsSuggestion()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCell.identifier, for: indexPath) as? FeedCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedSuggestionCell.identifier, for: indexPath) as? FeedSuggestionCell else { return UICollectionViewCell() }
         let collectionCell = viewModel.suggestion(of: indexPath)
         cell.configure(model: collectionCell)
         configCollectionCell(cell: cell)
