@@ -10,7 +10,6 @@ import UIKit
 class FeedSuggestionView: UIView {
     
     //MARK: - SUGGESTION VIEW
-    
     lazy var suggestionLabel: UILabel = {
         Components.buildLabel(text: "Sugestões de vagas para você", textColor: .white, font: .systemFont(ofSize: 20, weight: .semibold))
     }()
@@ -21,18 +20,21 @@ class FeedSuggestionView: UIView {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.delegate = self
-//        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.dataSource = self
         collectionView.register(FeedSuggestionCell.self, forCellWithReuseIdentifier: FeedSuggestionCell.identifier)
         collectionView.alwaysBounceHorizontal = true
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isPagingEnabled = true
         return collectionView
     }()
     
     lazy var pageControl: UIPageControl = {
         Components.buildPageControl()
     }()
+    
+    var suggestionList: [Suggestion] = []
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -41,6 +43,11 @@ class FeedSuggestionView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(suggestionList: [Suggestion]) {
+        self.suggestionList = suggestionList
+        suggestionCollectionView.reloadData()
     }
     
     private func setupView() {
@@ -69,14 +76,36 @@ class FeedSuggestionView: UIView {
             pageControl.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
+    
+    func configCollectionCell(cell: FeedSuggestionCell) {
+        cell.backgroundColor = .white
+        cell.layer.cornerRadius = 10
+    }
 }
 
-//extension FeedSuggestionView: UICollectionViewDelegate, UICollectionViewDataSource {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        <#code#>
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        <#code#>
-//    }
-//}
+extension FeedSuggestionView: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return suggestionList.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedSuggestionCell.identifier, for: indexPath) as? FeedSuggestionCell else { return UICollectionViewCell() }
+        cell.configure(model: suggestionList[indexPath.row])
+        configCollectionCell(cell: cell)
+        return cell
+    }
+}
+
+extension FeedSuggestionView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 350, height: 200)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+}

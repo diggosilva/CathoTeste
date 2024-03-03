@@ -42,6 +42,8 @@ class FeedSuggestionCell: UICollectionViewCell {
         Components.buildButtonSendCV()
     }()
     
+    let padding: CGFloat = 15
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -70,19 +72,19 @@ class FeedSuggestionCell: UICollectionViewCell {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            vStackView.topAnchor.constraint(equalTo: topAnchor, constant: 15),
-            vStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            vStackView.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor, constant: -15),
+            vStackView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            vStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            vStackView.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor, constant: -padding),
             
             dateLabel.topAnchor.constraint(equalTo: vStackView.topAnchor),
-            dateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            dateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             
             eyeImageView.bottomAnchor.constraint(equalTo: vStackView.bottomAnchor),
             eyeImageView.trailingAnchor.constraint(equalTo: dateLabel.trailingAnchor),
             
-            sendCVButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15),
-            sendCVButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            sendCVButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            sendCVButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
+            sendCVButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            sendCVButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             sendCVButton.heightAnchor.constraint(equalToConstant: 40),
         ])
     }

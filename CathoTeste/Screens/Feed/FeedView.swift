@@ -19,10 +19,10 @@ class FeedView: UIView {
     }()
     
     //MARK: - COLLECTIONVIEW
-    lazy var feedSuggestionView = FeedSuggestionView()
+    private lazy var feedSuggestionView = FeedSuggestionView()
     
     //MARK: - CARD INFERIOR HINTS
-    lazy var feedTipsView = FeedTipsView()
+    private lazy var feedTipsView = FeedTipsView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,6 +31,11 @@ class FeedView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(suggestionList: [Suggestion], tipsList: [Tips]) {
+        feedSuggestionView.configure(suggestionList: suggestionList)
+        feedTipsView.configure(tipsList: tipsList)
     }
     
     func configureUserInfo(model: UserInfo) {
@@ -51,7 +56,7 @@ class FeedView: UIView {
         addSubviews([
             imageView, nameLabel, feedSuggestionView
         ])
-        addSubview(feedTipsView)
+                addSubview(feedTipsView)
     }
     
     private func setConstraints() {
@@ -67,15 +72,12 @@ class FeedView: UIView {
             feedSuggestionView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 40),
             feedSuggestionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             feedSuggestionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            feedSuggestionView.heightAnchor.constraint(equalToConstant: 200),
+                        feedSuggestionView.heightAnchor.constraint(equalToConstant: 200),
             
-            
-            
-            
-            feedTipsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            feedTipsView.leadingAnchor.constraint(equalTo: feedSuggestionView.leadingAnchor),
-            feedTipsView.trailingAnchor.constraint(equalTo: feedSuggestionView.trailingAnchor),
-//            feedTipsView.heightAnchor.constraint(equalToConstant: 200),
+                        feedTipsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
+                        feedTipsView.leadingAnchor.constraint(equalTo: feedSuggestionView.leadingAnchor),
+                        feedTipsView.trailingAnchor.constraint(equalTo: feedSuggestionView.trailingAnchor),
+                        feedTipsView.heightAnchor.constraint(equalToConstant: 200),
         ])
     }
 }

@@ -46,22 +46,23 @@ class FeedViewController: UIViewController {
     func showLoadingState() {
         feedView.imageView.isHidden = true
         feedView.nameLabel.isHidden = true
-        feedView.feedSuggestionView.isHidden = true
-        feedView.feedTipsView.isHidden = true
+//        feedView.feedSuggestionView.isHidden = true
+//        feedView.feedTipsView.isHidden = true
+        
     }
     
     func showLoadedState() {
         feedView.imageView.isHidden = false
         feedView.nameLabel.isHidden = false
         
-        feedView.feedSuggestionView.suggestionCollectionView.delegate = self
-        feedView.feedSuggestionView.suggestionCollectionView.dataSource = self
-        feedView.feedSuggestionView.pageControl.numberOfPages = viewModel.numberOfRowsSuggestion()
-        feedView.feedSuggestionView.isHidden = false
+//        feedView.feedSuggestionView.pageControl.numberOfPages = viewModel.numberOfRowsSuggestion()
+//        feedView.feedSuggestionView.isHidden = false
+//        feedView.feedSuggestionView.suggestionList = viewModel.suggestionList
+//        feedView.feedSuggestionView.suggestionCollectionView.reloadData()
+//        
+//        feedView.feedTipsView.isHidden = false
         
-        feedView.feedTipsView.tipsCollectionView.delegate = self
-        feedView.feedTipsView.tipsCollectionView.dataSource = self
-        feedView.feedTipsView.isHidden = false
+        feedView.configure(suggestionList: viewModel.suggestionList, tipsList: viewModel.tipList)
     }
     
     func showErrorState() {
@@ -76,38 +77,5 @@ class FeedViewController: UIViewController {
         alert.addAction(ok)
         alert.addAction(nok)
         present(alert, animated: true)
-    }
-    
-    func configCollectionCell(cell: FeedSuggestionCell) {
-        cell.backgroundColor = .white
-        cell.layer.cornerRadius = 10
-    }
-}
-
-extension FeedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.numberOfRowsSuggestion()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedSuggestionCell.identifier, for: indexPath) as? FeedSuggestionCell else { return UICollectionViewCell() }
-        let collectionCell = viewModel.suggestion(of: indexPath)
-        cell.configure(model: collectionCell)
-        configCollectionCell(cell: cell)
-        return cell
-    }
-}
-
-extension FeedViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 350, height: 200)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 10
     }
 }
