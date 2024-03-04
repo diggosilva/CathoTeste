@@ -30,6 +30,7 @@ class FeedView: UIView {
         Components.buildLabel(text: "Olá, Nome", textColor: .white, font: .systemFont(ofSize: 20, weight: .regular))
     }()
     
+    //MARK: - HEADERVIEW PROFILEIMAGE & NAME
     private lazy var feedHeaderView = FeedHeaderView()
     
     //MARK: - COLLECTIONVIEW SUGGESTIONS
@@ -53,10 +54,6 @@ class FeedView: UIView {
         feedHeaderView.configure(candidate: candidate)
     }
     
-//    func configureUserInfo(model: UserInfo) {
-//        nameLabel.text = "Olá, \(model.name)"
-//    }
-    
     private func setupView() {
         setHierarchy()
         setConstraints()
@@ -65,12 +62,13 @@ class FeedView: UIView {
     private func setHierarchy() {
         backgroundColor = .azulCatho
         
+        feedHeaderView.translatesAutoresizingMaskIntoConstraints = false
         feedSuggestionView.translatesAutoresizingMaskIntoConstraints = false
         feedTipsView.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(scroll)
         scroll.addSubview(contentView)
-        contentView.addSubviews([imageView, nameLabel, feedSuggestionView, feedTipsView])
+        contentView.addSubviews([feedHeaderView, feedSuggestionView, feedTipsView])
     }
     
     private func setConstraints() {
@@ -90,18 +88,14 @@ class FeedView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            imageView.widthAnchor.constraint(equalToConstant: 80),
-            imageView.heightAnchor.constraint(equalToConstant: 80),
+            feedHeaderView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            feedHeaderView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            feedHeaderView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            feedHeaderView.heightAnchor.constraint(equalToConstant: 80),
             
-            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            nameLabel.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
-            
-            feedSuggestionView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 40),
-            feedSuggestionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            feedSuggestionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            feedSuggestionView.topAnchor.constraint(equalTo: feedHeaderView.bottomAnchor, constant: 40),
+            feedSuggestionView.leadingAnchor.constraint(equalTo: feedHeaderView.leadingAnchor),
+            feedSuggestionView.trailingAnchor.constraint(equalTo: feedHeaderView.trailingAnchor),
             
             feedTipsView.topAnchor.constraint(equalTo: feedSuggestionView.bottomAnchor, constant: 40),
             feedTipsView.leadingAnchor.constraint(equalTo: feedSuggestionView.leadingAnchor),

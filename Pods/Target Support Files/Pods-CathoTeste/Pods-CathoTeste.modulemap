@@ -1,0 +1,6 @@
+framework module Pods_CathoTeste {
+  umbrella header "Pods-CathoTeste-umbrella.h"
+
+  export *
+  module * { export * }
+}
