@@ -8,7 +8,6 @@
 import UIKit
 
 class FeedTipsView: UIView {
-    
     //MARK: - TIPS VIEW
     lazy var hintLabel: UILabel = {
         Components.buildLabel(text: "#DicasDosRecrutadores", textColor: .white, font: .systemFont(ofSize: 20, weight: .semibold))
@@ -26,6 +25,7 @@ class FeedTipsView: UIView {
         collectionView.alwaysBounceHorizontal = true
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isPagingEnabled = true
         return collectionView
     }()
     

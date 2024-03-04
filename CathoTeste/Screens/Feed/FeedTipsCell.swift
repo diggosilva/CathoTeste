@@ -46,7 +46,7 @@ class FeedTipsCell: UICollectionViewCell {
     func configure(model: Tips) {
         hintLabel.text = model.description
         checarCVButton.setTitle(model.button.label, for: .normal)
-        checarCVButton.isHidden = model.button.show
+        checarCVButton.isHidden = !model.button.show
     }
     
     private func setupView() {

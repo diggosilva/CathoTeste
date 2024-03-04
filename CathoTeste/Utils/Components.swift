@@ -121,7 +121,7 @@ class Components {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = axis
         stackView.spacing = 5
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .fill
         return stackView
     }
 }

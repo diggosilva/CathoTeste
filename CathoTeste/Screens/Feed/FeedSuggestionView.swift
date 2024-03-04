@@ -7,8 +7,57 @@
 
 import UIKit
 
-class FeedSuggestionView: UIView {
+class FeedHeaderView: UIView {
+    //MARK: - APP PROFILE
+    lazy var imageView: UIImageView = {
+        Components.buildImage()
+    }()
     
+    lazy var nameLabel: UILabel = {
+        Components.buildLabel(text: "Olá, Nome", textColor: .white, font: .systemFont(ofSize: 20, weight: .regular))
+    }()
+    
+    var candidate: UserInfo?
+    
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(candidate: UserInfo) {
+        self.candidate = candidate
+        nameLabel.text = "Banana"
+    }
+    
+    private func setupView() {
+        setHierarchy()
+        setConstraints()
+    }
+    
+    private func setHierarchy () {
+        backgroundColor = .brown
+        addSubviews([imageView, nameLabel])
+    }
+    
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 80),
+            imageView.heightAnchor.constraint(equalToConstant: 80),
+            
+            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            nameLabel.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+        ])
+    }
+}
+
+class FeedSuggestionView: UIView {
     //MARK: - SUGGESTION VIEW
     lazy var suggestionLabel: UILabel = {
         Components.buildLabel(text: "Sugestões de vagas para você", textColor: .white, font: .systemFont(ofSize: 20, weight: .semibold))
@@ -47,6 +96,7 @@ class FeedSuggestionView: UIView {
     
     func configure(suggestionList: [Suggestion]) {
         self.suggestionList = suggestionList
+        pageControl.numberOfPages = suggestionList.count
         suggestionCollectionView.reloadData()
     }
     

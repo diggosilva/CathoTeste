@@ -44,25 +44,11 @@ class FeedViewController: UIViewController {
     }
     
     func showLoadingState() {
-        feedView.imageView.isHidden = true
-        feedView.nameLabel.isHidden = true
-//        feedView.feedSuggestionView.isHidden = true
-//        feedView.feedTipsView.isHidden = true
-        
+        feedView.removeFromSuperview()
     }
     
     func showLoadedState() {
-        feedView.imageView.isHidden = false
-        feedView.nameLabel.isHidden = false
-        
-//        feedView.feedSuggestionView.pageControl.numberOfPages = viewModel.numberOfRowsSuggestion()
-//        feedView.feedSuggestionView.isHidden = false
-//        feedView.feedSuggestionView.suggestionList = viewModel.suggestionList
-//        feedView.feedSuggestionView.suggestionCollectionView.reloadData()
-//        
-//        feedView.feedTipsView.isHidden = false
-        
-        feedView.configure(suggestionList: viewModel.suggestionList, tipsList: viewModel.tipList)
+        feedView.configure(candidate: viewModel.candidate!, suggestionList: viewModel.suggestionList, tipsList: viewModel.tipList)
     }
     
     func showErrorState() {

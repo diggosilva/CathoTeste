@@ -22,6 +22,7 @@ class FeedViewModel {
     
     var suggestionList: [Suggestion] = []
     var tipList: [Tips] = []
+    var candidate: UserInfo?
     
     init(apiKeys: ApiKeys) {
         self.apiKeys = apiKeys
@@ -54,6 +55,7 @@ class FeedViewModel {
     func loadDataToken() {
         service.performAuth { userInfo in
             self.loadDataSuggestions(userInfo)
+            self.candidate = userInfo
             self.loadDataTips()
             self.dispatchGroup.notify(queue: .main, execute: self.hasArrivedSuggestionAndTips)
         } onError: { error in
