@@ -14,15 +14,20 @@ class FeedSuggestionView: UIView {
     }()
     
     lazy var suggestionCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        //        let layout = UICollectionViewFlowLayout()
+        //        layout.scrollDirection = .horizontal
+        
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
+            return self.createSection(for: sectionIndex)
+        }
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(FeedSuggestionCell.self, forCellWithReuseIdentifier: FeedSuggestionCell.identifier)
-        collectionView.alwaysBounceHorizontal = true
+        collectionView.alwaysBounceHorizontal = false
+        collectionView.alwaysBounceVertical = false
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPagingEnabled = true
@@ -42,6 +47,23 @@ class FeedSuggestionView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func createSection(for sectionIndex: Int) -> NSCollectionLayoutSection {
+//        var sectionTypes = suggestionList
+        return createEpisodeSectionLayout()
+    }
+    
+    public func createEpisodeSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+        
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(UIDevice.isiPhone ? 1.0 : 0.2),
+                                                                                          heightDimension: .absolute(200)), subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .groupPaging
+        return section
     }
     
     func configure(suggestionList: [Suggestion]) {
@@ -97,9 +119,9 @@ extension FeedSuggestionView: UICollectionViewDelegate, UICollectionViewDataSour
 }
 
 extension FeedSuggestionView: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 350, height: 200)

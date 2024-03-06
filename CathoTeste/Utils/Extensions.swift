@@ -16,3 +16,7 @@ extension UIView {
         views.forEach({ self.addSubview($0) })
     }
 }
+
+extension UIDevice {
+    static let isiPhone = UIDevice.current.userInterfaceIdiom == .phone
+}
