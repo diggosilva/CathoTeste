@@ -14,14 +14,7 @@ class FeedSuggestionView: UIView {
     }()
     
     lazy var suggestionCollectionView: UICollectionView = {
-        //        let layout = UICollectionViewFlowLayout()
-        //        layout.scrollDirection = .horizontal
-        
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
-            return self.createSection(for: sectionIndex)
-        }
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createSectionLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -35,35 +28,46 @@ class FeedSuggestionView: UIView {
     }()
     
     lazy var pageControl: UIPageControl = {
-        Components.buildPageControl()
+        let pageControl = UIPageControl()
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageControl.currentPage = 0
+        pageControl.currentPageIndicatorTintColor = .white
+        pageControl.addTarget(self, action: #selector(tappedPageControl), for: .valueChanged)
+        return pageControl
     }()
     
     var suggestionList: [Suggestion] = []
     
+    private var cellsItemHeight: NSCollectionLayoutDimension = .estimated(200)
+    private var padding: CGFloat = 20
+    private lazy var contentInsets = NSDirectionalEdgeInsets(top: 0, leading: padding, bottom: 0, trailing: padding)
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setupView()
+        suggestionCollectionView.delegate = self
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createSection(for sectionIndex: Int) -> NSCollectionLayoutSection {
-//        var sectionTypes = suggestionList
-        return createEpisodeSectionLayout()
+    @objc func tappedPageControl(_ sender: UIPageControl) {
+        self.suggestionCollectionView.scrollToItem(at: IndexPath(row: sender.currentPage, section: 0), at: .centeredHorizontally, animated: true)
     }
     
-    public func createEpisodeSectionLayout() -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+    public func createSectionLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: cellsItemHeight)
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(UIDevice.isiPhone ? 1.0 : 0.2),
-                                                                                          heightDimension: .absolute(200)), subitems: [item])
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: cellsItemHeight)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10
+        section.contentInsets = contentInsets
         section.orthogonalScrollingBehavior = .groupPaging
-        return section
+        return UICollectionViewCompositionalLayout(section: section)
     }
     
     func configure(suggestionList: [Suggestion]) {
@@ -105,7 +109,7 @@ class FeedSuggestionView: UIView {
     }
 }
 
-extension FeedSuggestionView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension FeedSuggestionView: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return suggestionList.count
     }
@@ -116,18 +120,14 @@ extension FeedSuggestionView: UICollectionViewDelegate, UICollectionViewDataSour
         configCollectionCell(cell: cell)
         return cell
     }
-}
-
-extension FeedSuggestionView: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-//    }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 350, height: 200)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 10
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let visibleRect = CGRect(origin: self.suggestionCollectionView.contentOffset, size: self.suggestionCollectionView.bounds.size)
+//        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+//        let visibleIndexPath = self.suggestionCollectionView.indexPathForItem(at: visiblePoint)
+//        self.pageControl.currentPage = visibleIndexPath?.row ?? 1
+        
+        scrollView.isPagingEnabled = true
+        pageControl.currentPage = Int(floorf(Float(scrollView.contentOffset.x) / Float(scrollView.frame.size.width)))
     }
 }

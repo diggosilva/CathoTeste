@@ -31,32 +31,6 @@ class Components {
         return label
     }
     
-    static func buildCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(FeedSuggestionCell.self, forCellWithReuseIdentifier: FeedSuggestionCell.identifier)
-        collectionView.alwaysBounceHorizontal = true
-        collectionView.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }
-    
-    static func buildTipsCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(FeedTipsCell.self, forCellWithReuseIdentifier: FeedTipsCell.identifier)
-        collectionView.alwaysBounceHorizontal = true
-        collectionView.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }
-    
     static func buildButtonSendCV() -> UIButton {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -75,22 +49,6 @@ class Components {
         imageView.clipsToBounds = true
         imageView.image = UIImage(systemName: "eye.fill")?.withTintColor(.azulCatho, renderingMode: .alwaysOriginal)
         return imageView
-    }
-    
-    static func buildPageControl() -> UIPageControl {
-        let pageControl = UIPageControl()
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        pageControl.currentPage = 0
-        pageControl.currentPageIndicatorTintColor = .white
-        return pageControl
-    }
-    
-    static func buildHintCardBG() -> UIView {
-        let card = UIView()
-        card.translatesAutoresizingMaskIntoConstraints = false
-        card.backgroundColor = .white
-        card.layer.cornerRadius = 10
-        return card
     }
     
     static func buildButtonCheckCV() -> UIButton {

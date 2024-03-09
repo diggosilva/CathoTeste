@@ -35,7 +35,7 @@ class FeedHeaderView: UIView {
         
         DispatchQueue.main.async {
             self.profileImage.sd_setImage(with: url)
-            self.nameLabel.text = candidate.name
+            self.nameLabel.text = "Olá, \(candidate.name)"
         }
     }
     

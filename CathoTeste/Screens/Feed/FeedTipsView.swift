@@ -14,20 +14,21 @@ class FeedTipsView: UIView {
     }()
     
     lazy var tipsCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createSectionLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(FeedTipsCell.self, forCellWithReuseIdentifier: FeedTipsCell.identifier)
-        collectionView.alwaysBounceHorizontal = true
+        collectionView.alwaysBounceHorizontal = false
+        collectionView.alwaysBounceVertical = false
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.isPagingEnabled = true
         return collectionView
     }()
+    
+    private var cellsItemHeight: NSCollectionLayoutDimension = .absolute(200)
+    private var padding: CGFloat = 20
+    private lazy var contentInsets = NSDirectionalEdgeInsets(top: 0, leading: padding, bottom: 0, trailing: padding)
     
     var tipsList: [Tips] = []
     
@@ -38,6 +39,20 @@ class FeedTipsView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func createSectionLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: cellsItemHeight)
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: cellsItemHeight)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10
+        section.contentInsets = contentInsets
+        section.orthogonalScrollingBehavior = .groupPaging
+        return UICollectionViewCompositionalLayout(section: section)
     }
     
     func configure(tipsList: [Tips]) {
@@ -84,19 +99,5 @@ extension FeedTipsView: UICollectionViewDelegate, UICollectionViewDataSource {
         cell.configure(model: tipsList[indexPath.row])
         configCollectionCell(cell: cell)
         return cell
-    }
-}
-
-extension FeedTipsView: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 350, height: 200)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 10
     }
 }
