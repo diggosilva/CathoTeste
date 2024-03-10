@@ -88,7 +88,7 @@ class FeedView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-            feedHeaderView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            feedHeaderView.topAnchor.constraint(equalTo: contentView.topAnchor),
             feedHeaderView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             feedHeaderView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             feedHeaderView.heightAnchor.constraint(equalToConstant: 80),

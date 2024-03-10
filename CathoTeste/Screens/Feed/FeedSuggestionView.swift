@@ -33,12 +33,14 @@ class FeedSuggestionView: UIView {
         pageControl.currentPage = 0
         pageControl.currentPageIndicatorTintColor = .white
         pageControl.addTarget(self, action: #selector(tappedPageControl), for: .valueChanged)
+//        pageControl.allowsContinuousInteraction = false
+        pageControl.isUserInteractionEnabled = false
         return pageControl
     }()
     
     var suggestionList: [Suggestion] = []
     
-    private var cellsItemHeight: NSCollectionLayoutDimension = .estimated(200)
+    private var cellsItemHeight: NSCollectionLayoutDimension = .absolute(200)
     private var padding: CGFloat = 20
     private lazy var contentInsets = NSDirectionalEdgeInsets(top: 0, leading: padding, bottom: 0, trailing: padding)
     
@@ -67,6 +69,11 @@ class FeedSuggestionView: UIView {
         section.interGroupSpacing = 10
         section.contentInsets = contentInsets
         section.orthogonalScrollingBehavior = .groupPaging
+        
+        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, point, environment in
+                self!.pageControl.currentPage = Int(floorf(Float(point.x) / Float((visibleItems.first?.frame.size.width)!)))
+              }
+        
         return UICollectionViewCompositionalLayout(section: section)
     }
     
@@ -119,15 +126,5 @@ extension FeedSuggestionView: UICollectionViewDelegate, UICollectionViewDataSour
         cell.configure(model: suggestionList[indexPath.row])
         configCollectionCell(cell: cell)
         return cell
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let visibleRect = CGRect(origin: self.suggestionCollectionView.contentOffset, size: self.suggestionCollectionView.bounds.size)
-//        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
-//        let visibleIndexPath = self.suggestionCollectionView.indexPathForItem(at: visiblePoint)
-//        self.pageControl.currentPage = visibleIndexPath?.row ?? 1
-        
-        scrollView.isPagingEnabled = true
-        pageControl.currentPage = Int(floorf(Float(scrollView.contentOffset.x) / Float(scrollView.frame.size.width)))
     }
 }
