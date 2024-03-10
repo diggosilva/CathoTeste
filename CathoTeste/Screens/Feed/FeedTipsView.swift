@@ -66,7 +66,6 @@ class FeedTipsView: UIView {
     }
     
     private func setHierarchy () {
-        backgroundColor = .magenta
         addSubviews([hintLabel, tipsCollectionView])
     }
     

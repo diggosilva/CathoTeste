@@ -45,7 +45,6 @@ class FeedHeaderView: UIView {
     }
     
     private func setHierarchy () {
-        backgroundColor = .brown
         addSubviews([profileImage, nameLabel])
     }
     

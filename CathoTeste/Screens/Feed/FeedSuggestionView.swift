@@ -33,8 +33,6 @@ class FeedSuggestionView: UIView {
         pageControl.currentPage = 0
         pageControl.currentPageIndicatorTintColor = .white
         pageControl.addTarget(self, action: #selector(tappedPageControl), for: .valueChanged)
-//        pageControl.allowsContinuousInteraction = false
-        pageControl.isUserInteractionEnabled = false
         return pageControl
     }()
     
@@ -55,7 +53,9 @@ class FeedSuggestionView: UIView {
     }
     
     @objc func tappedPageControl(_ sender: UIPageControl) {
-        self.suggestionCollectionView.scrollToItem(at: IndexPath(row: sender.currentPage, section: 0), at: .centeredHorizontally, animated: true)
+        UIView.animate(withDuration: 0.3) {
+            self.suggestionCollectionView.scrollToItem(at: IndexPath(item: sender.currentPage, section: 0), at: .centeredHorizontally, animated: false)
+        }
     }
     
     public func createSectionLayout() -> UICollectionViewCompositionalLayout {
@@ -89,7 +89,6 @@ class FeedSuggestionView: UIView {
     }
     
     private func setHierarchy () {
-        backgroundColor = .red
         addSubviews([suggestionLabel, suggestionCollectionView, pageControl])
     }
     
